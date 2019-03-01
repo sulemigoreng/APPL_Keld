@@ -3,6 +3,8 @@ public class Deposit extends Transaction {
    private Keypad keypad; // reference to keypad
    private DepositSlot depositSlot; // reference to deposit slot
    private final static int CANCELED = 0; // constant for cancel option
+   private boolean status;
+   
 
    // Deposit constructor
    public Deposit(int userAccountNumber, Screen atmScreen, 
@@ -13,6 +15,7 @@ public class Deposit extends Transaction {
       super(userAccountNumber, atmScreen, atmBankDatabase);
       keypad = atmKeypad;
       depositSlot = atmDepositSlot;
+      status = false;
    } 
 
    // perform transaction

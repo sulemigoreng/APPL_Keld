@@ -6,7 +6,7 @@ public class ATM {
    private CashDispenser cashDispenser; // ATM's cash dispenser
    private BankDatabase bankDatabase; // account information database
    private DepositSlot ATMDepositSlot;
-   
+   private boolean admin;
 
    // constants corresponding to main menu options
    private static final int BALANCE_INQUIRY = 1;
@@ -23,6 +23,7 @@ public class ATM {
       cashDispenser = new CashDispenser(); // create cash dispenser
       bankDatabase = new BankDatabase(); // create acct info database
       ATMDepositSlot = new DepositSlot();
+      admin = false;
    }
 
    // start ATM 
@@ -49,13 +50,16 @@ public class ATM {
       screen.displayMessage("\nEnter your PIN: "); // prompt for PIN
       int pin = keypad.getInput(); // input PIN
       
+      
       // set userAuthenticated to boolean value returned by database
       userAuthenticated = 
          bankDatabase.authenticateUser(accountNumber, pin);
       
+      
       // check whether authentication succeeded
       if (userAuthenticated) {
          currentAccountNumber = accountNumber; // save user's account #
+         admin = bankDatabase.checkAdmin(currentAccountNumber);
       } 
       else {
          screen.displayMessageLine(
@@ -74,7 +78,7 @@ public class ATM {
       while (!userExited) {
          // show main menu and get user selection
          int mainMenuSelection = displayMainMenu();
-
+         if(!admin){
          // decide how to proceed based on user's menu selection
          switch (mainMenuSelection) {
             // user chose to perform one of three transaction types
@@ -109,17 +113,41 @@ public class ATM {
                   "\nYou did not enter a valid selection. Try again.");
                break;
          }
+        }else{
+             switch (mainMenuSelection) {
+
+            case 6: // user chose to terminate session
+               screen.displayMessageLine("\nExiting the system...");
+               userExited = true; // this ATM session should end
+               break;
+            default: // 
+               screen.displayMessageLine(
+                  "\nYou did not enter a valid selection. Try again.");
+               break;
+             }
+        }
       } 
    } 
 
    // display the main menu and return an input selection
    private int displayMainMenu() {
+      if(!admin){
       screen.displayMessageLine("\nMain menu:");
       screen.displayMessageLine("1 - View my balance");
       screen.displayMessageLine("2 - Withdraw cash");
       screen.displayMessageLine("3 - Deposit funds");
       screen.displayMessageLine("4 - Exit\n");
       screen.displayMessage("Enter a choice: ");
+      }else{
+      screen.displayMessageLine("\nMain menu:");
+      screen.displayMessageLine("1 - Unblock Nasabah");
+      screen.displayMessageLine("2 - Add Nasabah");
+      screen.displayMessageLine("3 - Check Dispenser");
+      screen.displayMessageLine("4 - Add Money to Dispenser");
+      screen.displayMessageLine("5 - Validasi Deposit");
+      screen.displayMessageLine("6 - Exit \n");
+      screen.displayMessage("Enter a choice: ");    
+      }
       return keypad.getInput(); // return user's selection
    } 
          

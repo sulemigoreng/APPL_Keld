@@ -52,4 +52,7 @@ public class Account {
       return accountNumber;  
    }
    
+   public boolean getAdmin(){
+       return admin;
+   }
 } 
