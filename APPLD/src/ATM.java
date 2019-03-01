@@ -6,6 +6,7 @@ public class ATM {
    private CashDispenser cashDispenser; // ATM's cash dispenser
    private BankDatabase bankDatabase; // account information database
    private DepositSlot ATMDepositSlot;
+   private boolean admin = false;
    
 
    // constants corresponding to main menu options
@@ -34,7 +35,6 @@ public class ATM {
             screen.displayMessageLine("\nWelcome!");       
             authenticateUser(); // authenticate user
          }
-         
          performTransactions(); // user is now authenticated
          userAuthenticated = false; // reset before next ATM session
          currentAccountNumber = 0; // reset before next ATM session
@@ -56,6 +56,7 @@ public class ATM {
       // check whether authentication succeeded
       if (userAuthenticated) {
          currentAccountNumber = accountNumber; // save user's account #
+         admin = true;
       } 
       else {
          screen.displayMessageLine(
@@ -74,30 +75,38 @@ public class ATM {
       while (!userExited) {
          // show main menu and get user selection
          int mainMenuSelection = displayMainMenu();
-
+         if(!admin){
          // decide how to proceed based on user's menu selection
+         switch (mainMenuSelection) {
+            case EXIT: // user chose to terminate session
+               screen.displayMessageLine("\nExiting the system...");
+               userExited = true; // this ATM session should end
+               break;
+            default: // 
+               screen.displayMessageLine(
+                  "\nYou did not enter a valid selection. Try again.");
+             break;
+         }
+       }else{
+          // decide how to proceed based on user's menu selection
          switch (mainMenuSelection) {
             // user chose to perform one of three transaction types
             case BALANCE_INQUIRY:         
-
                // initialize as new object of chosen type
                currentTransaction = 
                   createTransaction(mainMenuSelection);
-
                currentTransaction.execute(); // execute transaction
                break; 
             case WITHDRAWAL:
                 // initialize as new object of chosen type
                currentTransaction = 
                   createTransaction(mainMenuSelection);
-               
                currentTransaction.execute();
                 
             break;
             case DEPOSIT:
                 currentTransaction = 
-                  createTransaction(mainMenuSelection);
-               
+                  createTransaction(mainMenuSelection);               
                currentTransaction.execute();
             break;
             case EXIT: // user chose to terminate session
@@ -108,18 +117,28 @@ public class ATM {
                screen.displayMessageLine(
                   "\nYou did not enter a valid selection. Try again.");
                break;
-         }
+         }   
+       }
       } 
    } 
-
    // display the main menu and return an input selection
    private int displayMainMenu() {
+      if(!admin){
       screen.displayMessageLine("\nMain menu:");
       screen.displayMessageLine("1 - View my balance");
       screen.displayMessageLine("2 - Withdraw cash");
       screen.displayMessageLine("3 - Deposit funds");
       screen.displayMessageLine("4 - Exit\n");
       screen.displayMessage("Enter a choice: ");
+      }else{
+      screen.displayMessageLine("\nMain menu:");
+      screen.displayMessageLine("1 - Unblock Nasabah");
+      screen.displayMessageLine("2 - Tambah Nasabah");
+      screen.displayMessageLine("3 - Lihat Uang Dispenser");
+      screen.displayMessageLine("4 - Tambah Uang Dispenser");
+      screen.displayMessageLine("5 - Validasi Deposit\n");
+      screen.displayMessage("Enter a choice: ");
+      }
       return keypad.getInput(); // return user's selection
    } 
          
