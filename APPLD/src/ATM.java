@@ -6,7 +6,6 @@ public class ATM {
    private CashDispenser cashDispenser; // ATM's cash dispenser
    private BankDatabase bankDatabase; // account information database
    private DepositSlot ATMDepositSlot;
-   //Hai
    
 
    // constants corresponding to main menu options
